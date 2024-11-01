@@ -18,25 +18,22 @@
           docker = pkgs.dockerTools.buildLayeredImage {
             inherit name;
             tag = version;
-            contents = [self.packages.${system}.default];
-            config = {
-              #Cmd = ["${self.packages.${system}.default}/bin/python3"];
-              #Args = ["-m" "${self.packages.${system}.default}"];
-              ExposedPorts = {"8010/tcp" = {};};
-            };
+            contents = with pkgs; [
+              python312
+            ];
           };
           default = (with pkgs; stdenv.mkDerivation {
             inherit system name src;
             buildInputs = with pkgs.python312Packages; [
+              pkgs.python312
               flask
               requests
               pyyaml
               pillow
-              pkgs.coreutils
             ];
             installPhase = ''
-              mkdir -p $out
-              cp -r $src/ycast/* $out
+              mkdir -p $out/ycast
+              cp -r $src/ycast $out/
             '';
           });
         };
