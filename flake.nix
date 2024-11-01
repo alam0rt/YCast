@@ -18,9 +18,7 @@
           docker = pkgs.dockerTools.buildLayeredImage {
             inherit name;
             tag = version;
-            contents = with pkgs; [
-              python312
-            ];
+            config.Cmd = [ "${pkgs.python312}/bin/python" "-m" "${self.packages.${system}.default}/ycast" ];
           };
           default = (with pkgs; stdenv.mkDerivation {
             inherit system name src;
